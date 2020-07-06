@@ -26,7 +26,7 @@
     ***. In a different terminal/CMD/Shell run "python3 -i -m g_api" also
 
       it will ask to follow a certain link in in order to authorize
-      then, it will ask you whether to create a new sheet - input y(for yes) or n(for no):
+      then, it will ask you whether to create a new sheet - input press any-key(for yes) or n(for no):
         if n:
           it will ask for a sheet_id in your google drive
          else:
