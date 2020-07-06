@@ -31,10 +31,10 @@ Running it for the first time:
        else:
         it will ask you to input a title
         
-you can change the sheet_id anytime by running the function "set_sheet_id(id)"
+you can change the sheet_id anytime by running the function "set_sheet_id(id)" in g_api.py
 
 
-if you want a sheet run "create_sheet(title)" it will automatically update the sheet_id
+if you want a sheet run "create_sheet(title)" it will automatically update the sheet_id in g_api.py
 
 !!!!ENJOY!!!!
       
