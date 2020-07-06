@@ -20,11 +20,10 @@
 
     4.Google Account
   
-
-## Running it for the first time:
+## to start using:
     1.  run "python3 app.py"
-
-    2. In a different terminal/CMD/Shell run "python3 -i -m g_api"
+### Running it for the first time:
+    ***. In a different terminal/CMD/Shell run "python3 -i -m g_api" also
 
       it will ask to follow a certain link in in order to authorize
       then, it will ask you whether to create a new sheet - input y(for yes) or n(for no):
