@@ -16,17 +16,24 @@ requirements:
     
   3.the google sheets api must be activated in your project
   
-  Google Account
+  4.Google Account
   
+
 Running it for the first time:
-  python3 -i -m g_api
+  1.  run "python3 app.py"
+  
+  2. In a different terminal/CMD/Shell run "python3 -i -m g_api"
+  
     it will ask to follow a certain link in in order to authorize
     then, it will ask you whether to create a new sheet - input y(for yes) or n(for no):
       if n:
         it will ask for a sheet_id in your google drive
        else:
         it will ask you to input a title
+        
 you can change the sheet_id anytime by running the function "set_sheet_id(id)"
+
+
 if you want a sheet run "create_sheet(title)" it will automatically update the sheet_id
 
 !!!!ENJOY!!!!
