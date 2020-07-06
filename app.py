@@ -5,7 +5,8 @@ from wtforms import StringField, SubmitField, BooleanField, IntegerField, TextAr
 from wtforms.validators import DataRequired, Length, Email, InputRequired, ValidationError
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import time
-from g_api import append_sheet
+from threading import Thread
+from g_api import _generate_token_, append_sheet
 
 app = Flask(__name__)
 
@@ -32,7 +33,7 @@ class Form(FlaskForm):
     l_name = StringField('Last Name', validators=[InputRequired(), Length(min=2)])
     address = StringField('Address', validators=[InputRequired(),])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    phone = StringField('Phone', validators=[InputRequired(), Length(max=10)])
+    phone = StringField('Phone', validators=[InputRequired()])
     dob = DateField('Birth Date')
     gender = SelectField('Gender', choices=[(0,'Choose gender'), (1,'Male'), (-1,'Female')], coerce=int)
     submit = SubmitField('Submit')
@@ -41,14 +42,24 @@ class Form(FlaskForm):
 def authorize():
     return f"""<h1>code: {request.args.get('code')}</h1>"""
 
+def async_append_sheet(row):
+    _generate_token_()
+    append_sheet(row)
+
+def append_to_sheet(row):
+    thr = Thread(target=async_append_sheet, args=[row])
+    print("thr")
+    thr.start()
+    print("thr.start()")
+    return thr
+
 @app.route('/', methods=['POST','GET'])
 def forms():
     form = Form()
-    sheet_id='1qgSkalEqfFouwnWmuTeiGuiSC4wcm7dKH2IIwN3nJ5c'
     if form.validate_on_submit():
         row=(form.f_name.data,form.l_name.data,form.address.data,form.email.data.lower(),form.phone.data,form.dob.data.strftime('%Y/%B/%d'))
         print(row)
-        append_sheet(sheet_id,row)
+        append_to_sheet(row)
         flash('Success!. Your response has been recorded.', 'success')
         return redirect(url_for('forms'))
     return render_template('index.html',form=form)

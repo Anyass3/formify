@@ -131,6 +131,7 @@ def generate_token():
         json.dump(_credentials_, json_token)
     with open('static/time.pkl', 'wb') as t:
         dill.dump(datetime.utcnow(), t)
+
 def _generate_token_():
     '''
     this is the checker for the generate_token function as described in it.
@@ -146,28 +147,58 @@ def _generate_token_():
         if (datetime.utcnow()-time_pkl).seconds/3600 >= 1:
             generate_token()
 
+_generate_token_()
+
+def set_sheet_id(sheet_id):
+    with open('static/sheet_id.json','w') as f:
+        json.dump({'sheet_id':sheet_id},f)
+
+def get_sheet_id():
+    try:
+        with open('static/sheet_id.json') as f:
+            sheet_id=json.load(f)['sheet_id']
+    except:
+        sheet_id = None
+        print('NO sheet sheet_id was set or no sheet was created')
+        print('try running create sheet or set a sheet sheet_id by running get_sheet_id()')
+    else:
+        return sheet_id
+
 def get_sheets():
-    _generate_token_()
     with open('static/credentials.json') as json_token:
         _credentials = json.load(json_token)
     credentials = google.oauth2.credentials.Credentials(**_credentials)
     # print(credentials)
-    sheets = build(api_service_name, api_version, credentials=credentials)
-    return sheets
-try:
-    sheets = get_sheets()
-except:
-    print("Please check your network connection")
-    print("Try running 'sheets = get_sheets()'")
+    try:
+        sheets = build(api_service_name, api_version, credentials=credentials)
+    except:
+        print("Please check your network connection")
+    else:
+        return sheets
+    print("Error")
+
 def create_sheet(title=None):
+    sheets = get_sheets()
     if not title:
         title=f'G-API -- {datetime.utcnow().strftime("%Y/%B/%A  %I:%M:%S %p")}'
     data={'properties':{'title': title}}
     res=sheets.spreadsheets().create(body=data).execute()
     sheet_id = res['spreadsheetId']
+    set_sheet_id(sheet_id)
     print(f'Created {res["properties"]["title"]} with ID: {sheet_id}')
     return sheet_id
-def update_sheet(id,data_list,range="A1",value_type='RAW'):
+
+if not get_sheet_id():
+    i=input('Do you want to create a new sheet - input any-key(for yes) or n(for no): ')
+    if i!='n':
+        t=input('Please input a sheet title: ')
+        create_sheet(t)
+    else:
+        si=input('Please input a sheet id: ')
+        set_sheet_id(si)
+
+def update_sheet(data_list,range="A1",value_type='RAW',sheet_id=None):
+    sheets = get_sheets()
     if type(data_list) == list or type(data_list) == tuple:
         if type(data_list[0]) == list or type(data_list[0]) == tuple:
             data={'values': [tuple(row) for row in data_list]}
@@ -176,17 +207,23 @@ def update_sheet(id,data_list,range="A1",value_type='RAW'):
     else:
         print('Error')
         return None
-    res=sheets.spreadsheets().values().update(spreadsheetId=id,range=range,valueInputOption=value_type,body=data).execute()
-    print(f'Updated ID: {id} as {value_type}')
+    if not sheet_id:
+        sheet_id = get_sheet_id()
+    res=sheets.spreadsheets().values().update(spreadsheetId=sheet_id,range=range,valueInputOption=value_type,body=data).execute()
+    print(f'Updated ID: {sheet_id} as {value_type}')
     return res
 
-def batch_update_sheet(id,data=None):
+def batch_update_sheet(data=None,sheet_id=None):
+    sheets = get_sheets()
     if not data:
         with open('static/batch_update.json') as bu:
             data = json.load(bu)
-    res=sheets.spreadsheets().batchUpdate(spreadsheetId=id,body=data).execute()
+    if not sheet_id:
+        sheet_id = get_sheet_id()
+    res=sheets.spreadsheets().batchUpdate(spreadsheetId=sheet_id,body=data).execute()
 
-def append_sheet(id,data_list,range="A1",value_type='RAW'):
+def append_sheet(data_list,sheet_id=None,range="A1",value_type='RAW'):
+    sheets = get_sheets()
     if type(data_list) == list or type(data_list) == tuple:
         if type(data_list[0]) == list or type(data_list[0]) == tuple:
             data={'values': [tuple(row) for row in data_list]}
@@ -195,13 +232,18 @@ def append_sheet(id,data_list,range="A1",value_type='RAW'):
     else:
         print('Error')
         return None
-    res=sheets.spreadsheets().values().append(spreadsheetId=id,range=range,valueInputOption=value_type,body=data).execute()
-    print(f'Appended ID: {id} as {value_type}')
+    if not sheet_id:
+        sheet_id = get_sheet_id()
+    res=sheets.spreadsheets().values().append(spreadsheetId=sheet_id,range=range,valueInputOption=value_type,body=data).execute()
+    print(f'Appended ID: {sheet_id} as {value_type}')
     return res
 
-def print_sheet(id,range='A1'):
+def print_sheet(range='A1',sheet_id=None):
+    sheets = get_sheets()
+    if not sheet_id:
+        sheet_id = get_sheet_id()
     sheet = sheets.spreadsheets()
-    result = sheet.values().get(spreadsheetId=id,range=range).execute()
+    result = sheet.values().get(spreadsheetId=sheet_id,range=range).execute()
     values = result.get('values', [])
 
     if not values:
