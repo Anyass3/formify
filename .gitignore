@@ -1,2 +1,10 @@
 __pycache__/*
 fenv/*
+.vscode/settings.json
+static/client_secret.json
+static/credentials.json
+static/resp.json
+static/time.pkl
+static/token.json
+static/client_secret.json
+static/_client_secret.json

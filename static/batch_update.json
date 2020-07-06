@@ -1,0 +1,26 @@
+{
+    "requests": [
+        {
+            "repeatCell": {
+                "range": {
+                    "endRowIndex": 1
+                },
+                "cell": {
+                    "userEnteredFormat": {
+                        "textFormat": {
+                            "bold": true
+                        }
+                    }
+                },
+                "fields": "userEnteredFormat.textFormat.bold"
+            }
+        },
+        {
+            "autoResizeDimensions": {
+              "dimensions": {
+                "dimension": "COLUMNS"
+              }
+            }
+          }
+    ]
+}
