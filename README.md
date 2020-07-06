@@ -7,11 +7,17 @@ It is built with the google sheets api
 if the form is submited, the data is automatically saved in your created google sheet which is saved in your google drive 
 
 requirements:
-  pip installs the requirements in your activated environment
-  client_secret.json -- this can be obtained from console.cloud.google.com after creating a project and creating an Oauth2 client
+
+  1.pip installs the requirements in your activated environment
+  
+  2.client_secret.json -- this can be obtained from console.cloud.google.com after creating a project and creating an Oauth2 client
+  
     save it here 'static/'
-  the google sheets api must be activated in your project
+    
+  3.the google sheets api must be activated in your project
+  
   Google Account
+  
 Running it for the first time:
   python3 -i -m g_api
     it will ask to follow a certain link in in order to authorize
