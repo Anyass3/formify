@@ -39,9 +39,6 @@ class Form(FlaskForm):
     gender = SelectField('Gender', choices=[(1,'Male'), (-1,'Female')], coerce=int)
     submit = SubmitField('Submit')
 
-@app.route('/authorize')
-def authorize():
-    return f"""<h1>code: {request.args.get('code')}</h1>"""
 
 def async_generate_token():
     _generate_token_()

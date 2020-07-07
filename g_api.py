@@ -47,8 +47,7 @@ with open(client_secrets_file) as cs_file:
     client_secrets = json.load(cs_file)
     client_id=client_secrets['web']['client_id']
     client_secret=client_secrets['web']['client_secret']
-    token_uri=client_secrets['web']['redirect_uris'][0]
-
+    redirect_uri=client_secrets['web']['redirect_uris'][0]
 base_token_url = 'https://accounts.google.com/o/oauth2/token'
 
 def authorize():
@@ -59,7 +58,7 @@ def authorize():
     # Get credentials and create an API client
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         client_secrets_file, scopes)
-    flow.redirect_uri = 'http://127.0.0.1:5000/authorize'
+    flow.redirect_uri = redirect_uri
 
     authorization_url, state = flow.authorization_url(
         # Enable offline access so that you can refresh an access token without
@@ -125,7 +124,7 @@ def generate_token():
         return
     with open('static/token.json','w') as json_token:
         json.dump(json_resp, json_token)
-    _credentials_={'token':token,'refresh_token':refresh_token,'token_uri':token_uri,'client_id':client_id,'client_secret':client_secret,'scopes':scopes}
+    _credentials_={'token':token,'refresh_token':refresh_token,'client_id':client_id,'client_secret':client_secret,'scopes':scopes}
     with open('static/credentials.json', 'w') as json_token:
         json.dump(_credentials_, json_token)
     with open('static/time.pkl', 'wb') as t:
@@ -140,9 +139,7 @@ def _generate_token_():
         with open('static/time.pkl', 'rb') as t:
             time_pkl = dill.load(t)
     except:
-        with open('static/time.pkl', 'wb') as t:
-            dill.dump(datetime.utcnow(), t)
-            generate_token()
+        generate_token()
     else:
         if (datetime.utcnow()-time_pkl).seconds/3600 >= 1:
             generate_token()
