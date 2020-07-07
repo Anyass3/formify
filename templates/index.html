@@ -12,10 +12,30 @@
 
   <title>Form</title>
   <style>
+    @font-face {
+      font-family: lemon;
+      src: url(static/fonts/Lemon.ttf);
+    }
+
+    @font-face {
+      font-family: roboto;
+      src: url(static/fonts/Roboto-Regular.ttf);
+    }
+
+    @font-face {
+      font-family: roboto-bold;
+      src: url(static/fonts/Roboto-Bold.ttf);
+    }
+
+    @font-face {
+      font-family: rose;
+      src: url(static/fonts/DroidSansFallback.ttf);
+    }
+
     html,
     body {
       height: 100%;
-      font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+      font-family: rose;
       background: #fafafa
     }
 
@@ -30,26 +50,54 @@
       width: 95% !important;
       background-color: transparent !important;
       border-color: transparent !important;
-      border-bottom:1px solid #1a237e !important ;
+      border-bottom: 1px solid #1a237e !important;
+      outline: none !important;
     }
+    .v-input{
+      border-bottom: 1px solid #f44336 !important;
+    }
+    input.v-input:focus{
+      border-bottom: 3px solid #f44336 !important;
+    }
+
     input:focus,
-    input:active{
+    textarea:focus,
+    select:focus,
+    input:active {
       background-color: transparent !important;
-      border-color: transparent !important;
+      border-color: inherit !important;
       border: none !important;
-      border-bottom:4px solid #1a237e !important ;
+      border-bottom: 3px solid #1a237e !important;
+      outline: none !important;
     }
-    input[type=submit],input[type=submit]:active,input[type=submit]:focus{
+
+    .form-control:focus {
+      border-color: inherit !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+
+    input[type=submit],
+    input[type=submit]:active,
+    input[type=submit]:focus {
       background-color: #3f51b5 !important;
       border-color: transparent !important;
-      border-bottom:none !important;
+      border-bottom: none !important;
 
     }
-    
+
     .input_group {
-      border-radius: 20px;
+      border-radius: 16px;
       background: #e8eaf6;
       height: 130px
+    }
+
+    .i-invalid {
+      margin-top: 5px;
+      border-radius: 16px;
+      background: #e8eaf6;
+      border: 1px solid #f44336
     }
   </style>
 </head>
@@ -68,147 +116,161 @@
 <body>
   <div class="mt-3 size">
     {{flash_message()}}
-    <div class="p-4 lead" style="color:#331b92">Formify</div>
+    <div class="p-4 lead" style="color:#331b92;font-family:lemon;">Formify</div>
   </div>
   <div class="d-flex">
     <div id='' class="size container">
       <div style="min-height: 100px; display:block;background:#0091ea;border-radius: 5px;border-top:5px solid #3f51b5">
-        <div class="p-4 lead" style="color: white;">Discription goes here
+        <div class="p-4 lead" style="color: white;font-family:roboto-bold">Discription goes here
         </div>
       </div>
       <form novalidate method="POST">
         {{ form.csrf_token }}
-        <div class="input_group" class="input_group">
-          <div class="form-group mt-3">
-            {{ form.f_name.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.f_name.errors %}
-            <div class="__input__">
-              {{ form.f_name(class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.f_name.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.f_name.errors %}{% if form.f_name.errors %}class="i-invalid"{% endif %}{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.f_name.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.f_name.errors %}
+              <div class="__input__">
+                {{ form.f_name(class='form-control form-control-lg m-auto is-invalid v-input') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.f_name.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.f_name(class='form-control form-control-lg m-auto  ') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.f_name(class='form-control form-control-lg m-auto  ') }}
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="input_group">
-          <div class="form-group mt-3">
-            {{ form.l_name.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.l_name.errors %}
-            <div class="__input__">
-              {{ form.l_name(class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.l_name.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.l_name.errors %}class="i-invalid"{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.l_name.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.l_name.errors %}
+              <div class="__input__">
+                {{ form.l_name(class='form-control form-control-lg m-auto  is-invalid v-input ') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.l_name.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.l_name(class='form-control form-control-lg m-auto  ') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.l_name(class='form-control form-control-lg m-auto  ') }}
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="input_group">
-          <div class="form-group mt-3">
-            {{ form.address.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.address.errors %}
-            <div class="__input__">
-              {{ form.address(class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.address.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.address.errors %}class="i-invalid"{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.address.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.address.errors %}
+              <div class="__input__">
+                {{ form.address(class='form-control form-control-lg m-auto  is-invalid v-input ') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.address.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.address(class='form-control form-control-lg m-auto  ') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.address(class='form-control form-control-lg m-auto  ') }}
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="input_group">
-          <div class="form-group mt-3">
-            {{ form.email.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.email.errors %}
-            <div class="__input__">
-              {{ form.email(class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.email.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.email.errors %}class="i-invalid"{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.email.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.email.errors %}
+              <div class="__input__">
+                {{ form.email(class='form-control form-control-lg m-auto  is-invalid v-input ') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.email.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.email(class='form-control form-control-lg m-auto  text-lowercase') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.email(class='form-control form-control-lg m-auto  text-lowercase') }}
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="input_group">
-          <div class="form-group mt-3">
-            {{ form.phone.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.phone.errors %}
-            <div class="__input__">
-              {{ form.phone(class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.phone.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.phone.errors %}class="i-invalid"{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.phone.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.phone.errors %}
+              <div class="__input__">
+                {{ form.phone(class='form-control form-control-lg m-auto  is-invalid v-input ') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.phone.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.phone(class='form-control form-control-lg m-auto  ') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.phone(class='form-control form-control-lg m-auto  ') }}
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="input_group">
-          <div class="form-group mt-3">
-            {{ form.dob.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.dob.errors %}
-            <div class="__input__">
-              {{ form.dob(type='date', class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.dob.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.dob.errors %}class="i-invalid"{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.dob.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.dob.errors %}
+              <div class="__input__">
+                {{ form.dob(type='date', class='form-control form-control-lg m-auto  is-invalid v-input ') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.dob.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.dob(type='date', class='form-control form-control-lg m-auto  ') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.dob(type='date', class='form-control form-control-lg m-auto  ') }}
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="input_group">
-          <div class="form-group mt-3">
-            {{ form.gender.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
-            {% if form.gender.errors %}
-            <div class="__input__">
-              {{ form.gender(class='form-control form-control-lg m-auto  is-invalid ') }}
-              <div class="invalid-feedback" style='margin-left:3%'>
-                {% for error in form.gender.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
+        <div {% if form.gender.errors %}class="i-invalid"{% endif %}>
+          <div class="input_group">
+            <div class="form-group mt-3">
+              {{ form.gender.label(class="form-control-label col-form-label mt-4", style='margin-left:3%') }}
+              {% if form.gender.errors %}
+              <div class="__input__">
+                {{ form.gender(class='form-control form-control-lg m-auto  is-invalid v-input ') }}
+                <div class="invalid-feedback" style='margin-left:3%'>
+                  {% for error in form.gender.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
               </div>
+              {% else %}
+              <div class="__input__">
+                {{ form.gender(class='form-control form-control-lg m-auto  ') }}
+              </div>
+              {% endif %}
             </div>
-            {% else %}
-            <div class="__input__">
-              {{ form.gender(class='form-control form-control-lg m-auto  ') }}
-            </div>
-            {% endif %}
           </div>
         </div>
         <div class="" style="border-radius: 20px;">
@@ -230,6 +292,27 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
     crossorigin="anonymous"></script>
+
+  <script>
+    document.querySelectorAll('input').forEach.classList
+
+  </script>
 </body>
 
 </html>
+{#
+def gt():
+     '''
+     this is the checker for the generate_token function as described in it.
+     '''
+     try:
+         with open('static/time.pkl', 'rb') as t:
+             time_pkl = dill.load(t)
+     except:
+         with open('static/time.pkl', 'wb') as t:
+             dill.dump(datetime.utcnow(), t)
+             print('generate_token()')
+     else:
+         if (datetime.utcnow()-time_pkl).seconds/3600 >= 1:
+             print('generate_token()')
+#}

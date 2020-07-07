@@ -102,7 +102,6 @@ def get_refresh_token():
         refresh_token=authorize()
     return refresh_token
 
-
 def generate_token():
     '''
     #*this will generate a new access token everytime it is
@@ -131,6 +130,7 @@ def generate_token():
         json.dump(_credentials_, json_token)
     with open('static/time.pkl', 'wb') as t:
         dill.dump(datetime.utcnow(), t)
+    print('Generated a new access token')
 
 def _generate_token_():
     '''
@@ -146,9 +146,7 @@ def _generate_token_():
     else:
         if (datetime.utcnow()-time_pkl).seconds/3600 >= 1:
             generate_token()
-
-_generate_token_()
-
+#_generate_token_()
 def set_sheet_id(sheet_id):
     with open('static/sheet_id.json','w') as f:
         json.dump({'sheet_id':sheet_id},f)
