@@ -24,11 +24,6 @@ you will need a client_secrets or client_secrets_file
 from the google API documentation
 '''
 
-import os
-
-import googleapiclient.discovery
-import googleapiclient.errors
-
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 
 
